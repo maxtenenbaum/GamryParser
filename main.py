@@ -64,3 +64,5 @@ if pathtype == 'folder':
                 saveway = f"{filepath}/{file}"
                 visualization.output_all_to_csv(results, preprocessing.vlimit1, preprocessing.vlimit2, saveway)                        
 
+            elif 'EISPOT' in experiment_type:
+                pass
