@@ -70,7 +70,7 @@ class Preprocessor():
             curve_df = curve_df.apply(pd.to_numeric, errors='ignore')
             curve_data[curve] = curve_df[['V vs. Ref.', 'A']]
 
-        print(f"\nNumber of curves found: {len(curve_data)}")
-        print("Curves:", list(curve_data.keys()))
+        #print(f"\nNumber of curves found: {len(curve_data)}")
+        #print("Curves:", list(curve_data.keys()))
 
         return curve_data
