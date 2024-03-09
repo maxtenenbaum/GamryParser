@@ -19,10 +19,10 @@ class DataLoading:
             raise ValueError("No file was selected.")
         
         file_or_directory = messagebox.askquestion(title='File or folder', message='Analyze only this file? \n\nYes (single file) \nNo (all in folder)')
-        if file_or_directory == 'yes':
+        if file_or_directory == 'no':
             self.filepath = self.filepath.rsplit('/',1)[0]
             self.pathtype = 'folder'
-        if file_or_directory == 'no':
+        if file_or_directory == 'yes':
             self.pathtype == 'file'
 
     def get_file_path(self):
@@ -30,3 +30,4 @@ class DataLoading:
 
     def get_path_type(self):
         return self.pathtype
+
