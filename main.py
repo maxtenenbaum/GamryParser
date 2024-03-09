@@ -60,5 +60,7 @@ if pathtype == 'folder':
                 surface_area = 0.0000199504 
                 analysis = Analysis(curve_data, preprocessing.sampling_rate, surface_area)
                 results = analysis.process_curves()
-                p
+                visualization = Visualization()
+                saveway = f"{filepath}/{file}"
+                visualization.output_all_to_csv(results, preprocessing.vlimit1, preprocessing.vlimit2, saveway)                        
 

@@ -61,6 +61,26 @@ class Visualization:
                 result_dataframe.to_csv(file, index=False)
             #messagebox.showinfo("Info", f'Data written to {filename}')
 
+    def output_all_to_csv(self, result_dataframe, vlimit1, vlimit2, filepath):
+            # Extract directory and original filename
+            directory, original_filename = os.path.split(filepath)
+            base_filename, _ = os.path.splitext(original_filename)
+            output_filename = os.path.join(directory, f'{base_filename}_analysis.csv')
+
+            # Export the dataframe to CSV
+            with open(output_filename, 'w', newline='') as file:
+                writer = csv.writer(file)
+                
+                # Writing voltage limits and filename
+                writer.writerow(['Filename', original_filename])
+                writer.writerow(['Voltage Window (V)', vlimit1, vlimit2])
+                writer.writerow([])  # Add an empty row for separation
+
+                # Writing the dataframe
+                result_dataframe.to_csv(file, index=False, header=True)
+
+            print(f'Data written to {output_filename}')
+
 
 
 
