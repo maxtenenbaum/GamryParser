@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import pandas as pd
 import numpy as np
+import csv 
 
 class Visualization:
     def __init__(self):
@@ -25,7 +26,7 @@ class Visualization:
         return self.output_path
     
 
-    def output_as_csv(self, result_dataframe):
+    def output_as_csv(self, result_dataframe, vlimit1, vlimit2, filepath):
             while True:
                 root = tk.Tk()
                 root.withdraw()
@@ -47,7 +48,17 @@ class Visualization:
                 root.destroy()
 
             # Export the dataframe to CSV
-            result_dataframe.to_csv(filename, index=False)
+            with open(filename, mode='w', newline='') as file:
+                writer = csv.writer(file)
+
+                # Writing voltage limits
+                writer.writerow(['Filename', filepath])
+                writer.writerow(['Voltage Window (V)', vlimit1, vlimit2])
+                #writer.writerow(['vlimit2', vlimit2])
+                writer.writerow([])  # Add an empty row for separation
+
+                # Writing the dataframe
+                result_dataframe.to_csv(file, index=False)
             #messagebox.showinfo("Info", f'Data written to {filename}')
 
 

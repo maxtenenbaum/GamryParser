@@ -6,6 +6,7 @@ class DataLoading:
     def __init__(self):
         self.filepath = None
         self.pathtype = None
+        self.file_or_directory = None
 
     def open_file_dialog(self):
         root = tk.Tk()
@@ -18,12 +19,12 @@ class DataLoading:
         if not self.filepath:
             raise ValueError("No file was selected.")
         
-        file_or_directory = messagebox.askquestion(title='File or folder', message='Analyze only this file? \n\nYes (single file) \nNo (all in folder)')
-        if file_or_directory == 'no':
+        self.file_or_directory = messagebox.askquestion(title='File or folder', message='Analyze only this file? \n\nYes (single file) \nNo (all in folder)')
+        if self.file_or_directory == 'no':
             self.filepath = self.filepath.rsplit('/',1)[0]
             self.pathtype = 'folder'
-        if file_or_directory == 'yes':
-            self.pathtype == 'file'
+        if self.file_or_directory == 'yes':
+            self.pathtype = 'file'
 
     def get_file_path(self):
         return self.filepath

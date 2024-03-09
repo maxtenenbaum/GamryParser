@@ -33,23 +33,14 @@ class Analysis:
 
             # Storing the results
             results.append({
-                'Curve': curve,
-                'CSC_A': csc_a,
-                'CSC_C': csc_c,
-                'Total_Anodal_Charge': total_anodal_charge,
-                'Total_Cathodal_Charge': total_cathodal_charge,
-                'Qh': qh
+                'Curve #': curve,
+                'CSC_A': round(csc_a,3),
+                'CSC_C': round(csc_c,3),
+                'Total_Anodal_Charge': round(total_anodal_charge,3),
+                'Total_Cathodal_Charge': round(total_cathodal_charge,3),
+                'Qh': round(qh,3)
             })
 
         # Convert the results to a DataFrame
         results_df = pd.DataFrame(results)
         return(results_df)
-
-        # Export to CSV
-"""     output_path = os.path.join(self.output_directory, 'curve_analysis.csv')
-        results_df.to_csv('output_path', index=False)
-        print(f"Data written to {output_path}")"""
-
-# Example usage:
-# analysis = Analysis(curve_dataframes, sampling_rate, surface_area)
-# analysis.process_curves()
