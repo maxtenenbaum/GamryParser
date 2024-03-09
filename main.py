@@ -13,31 +13,34 @@ filepath = data_loader.get_file_path()
 pathtype = data_loader.get_path_type()
 print(f"Filepath: {filepath} Pathtype: {pathtype}")
 
-"""ADD LOGIC FOR LOOPING DEPENDING ON PATHTYPE"""
 
-# Determine CV or EIS
-preprocessing = Preprocessor(filepath)
-preprocessing.experiment_type()
-experiment_type = preprocessing.get_experiment_type()
-#print(f"Experiment: {experiment_type}")
+if pathtype == 'file':
+    # Determine CV or EIS
+    preprocessing = Preprocessor(filepath)
+    preprocessing.experiment_type()
+    experiment_type = preprocessing.get_experiment_type()
+    #print(f"Experiment: {experiment_type}")
 
-if 'CV' in experiment_type:
-    # Metadata
-    preprocessing.pull_cv_metadata()
-    # Extract Curves
-    curve_data = preprocessing.extract_cv_curves()
-    # Analysis
-    surface_area = 0.0000199504 
-    analysis = Analysis(curve_data, preprocessing.sampling_rate, surface_area)
-    results = analysis.process_curves()
-    # Output
-    visualization = Visualization()
-    visualization.open_save_dialog()
-    save_path = visualization.get_save_path()
-    visualization.output_as_csv(results)
+    if 'CV' in experiment_type:
+        # Metadata
+        preprocessing.pull_cv_metadata()
+        # Extract Curves
+        curve_data = preprocessing.extract_cv_curves()
+        # Analysis
+        surface_area = 0.0000199504 
+        analysis = Analysis(curve_data, preprocessing.sampling_rate, surface_area)
+        results = analysis.process_curves()
+        # Output
+        visualization = Visualization()
+        visualization.open_save_dialog()
+        save_path = visualization.get_save_path()
+        visualization.output_as_csv(results)
 
-elif experiment_type == 'EISPOT':
-    pass
+    elif experiment_type == 'EISPOT':
+        pass
 
+
+if pathtype == 'folder':
+    print("AHAHHHhelspsp")
 
 
