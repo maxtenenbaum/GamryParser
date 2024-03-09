@@ -4,6 +4,7 @@ from tkinter import filedialog
 from data_loading import DataLoading
 from preprocessing import Preprocessor
 from analysis import Analysis
+from output import Visualization
 
 # Opens a file and asks whether it is one file or a folder
 data_loader = DataLoading()
@@ -30,6 +31,10 @@ if 'CV' in experiment_type:
     analysis = Analysis(curve_data, preprocessing.sampling_rate, surface_area)
     results = analysis.process_curves()
     # Output
+    visualization = Visualization()
+    visualization.open_save_dialog()
+    save_path = visualization.get_save_path()
+    visualization.output_as_csv(results)
 
 elif experiment_type == 'EISPOT':
     pass
