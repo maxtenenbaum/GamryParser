@@ -10,10 +10,16 @@ class Preprocessor():
         self.vlimit1 = 0.0
         self.vlimit2 = 0.0
         self.sampling_rate = 0.0
+        self.notes = ''
     
     def experiment_type(self):
-        with open(self.filepath, 'r') as file:
-            lines = file.readlines()
+        try:
+            with open(self.filepath, 'r', encoding='utf-8') as file:
+                lines = file.readlines()
+        except UnicodeDecodeError:
+            with open(self.filepath, 'r', encoding='ISO-8859-1') as file:
+                lines = file.readlines()
+
         for line in lines:
             split_line = line.split('\t')
             if split_line[0] == "TAG":
@@ -23,8 +29,12 @@ class Preprocessor():
         return self.experiment
 
     def pull_cv_metadata(self):
-        with open(self.filepath, 'r') as file:
-            lines = file.readlines()
+        try:
+            with open(self.filepath, 'r', encoding='utf-8') as file:
+                lines = file.readlines()
+        except UnicodeDecodeError:
+            with open(self.filepath, 'r', encoding='ISO-8859-1') as file:
+                lines = file.readlines()
         file_name = os.path.basename(self.filepath)
         date, time = lines[3].split('\t')[2], lines[4].split('\t')[2]
         for line in lines:
@@ -39,6 +49,20 @@ class Preprocessor():
             elif split_line[0] == "VLIMIT2":
                 self.vlimit2 = float(split_line[2])
         self.sampling_rate = self.step_size / self.scan_rate if self.scan_rate else 0
+
+    def pull_eis_metadata(self):
+        try:
+            with open(self.filepath, 'r', encoding='utf-8') as file:
+                lines = file.readlines()
+        except UnicodeDecodeError:
+            with open(self.filepath, 'r', encoding='ISO-8859-1') as file:
+                lines = file.readlines()
+        file_name = os.path.basename(self.filepath)
+        date, time = lines[3].split('\t')[2], lines[4].split('\t')[2]
+        for line in lines:
+            split_line = line.split('\t')
+            if split_line[0] == "NOTES":
+                self.notes = split_line[-1]
 
 
     def extract_cv_curves(self):
@@ -70,7 +94,49 @@ class Preprocessor():
             curve_df = curve_df.apply(pd.to_numeric, errors='ignore')
             curve_data[curve] = curve_df[['V vs. Ref.', 'A']]
 
-        #print(f"\nNumber of curves found: {len(curve_data)}")
-        #print("Curves:", list(curve_data.keys()))
-
         return curve_data
+
+
+    def extract_eis(self):
+        try:
+            with open(self.filepath, 'r', encoding='utf-8') as file:
+                lines = file.readlines()
+        except UnicodeDecodeError:
+            with open(self.filepath, 'r', encoding='ISO-8859-1') as file:
+                lines = file.readlines()
+
+        eis_data = []
+        headers = []
+        data_section = False
+
+        for i, line in enumerate(lines):
+            if 'ZCURVE' in line:
+                data_section = True
+                continue
+            if data_section and line.startswith('\tPt'):
+                headers = line.strip().split('\t')[1:]  # Extract headers
+                data_section = False  # Stop further header extraction
+            elif line.startswith('\t'):
+                values = line.strip().split('\t')[1:]
+                if len(values) == len(headers):
+                    eis_data.append(values)
+
+        eis_df = pd.DataFrame(eis_data, columns=headers)
+        eis_df = eis_df.apply(pd.to_numeric, errors='ignore')
+        eis_dataframe = eis_df[['Freq', 'Zreal']]
+
+        return eis_dataframe
+
+
+"""        if not headers or not eis_data:
+            return None  # Or handle error as you wish"""
+
+
+            
+
+
+
+
+        
+                
+

@@ -44,3 +44,28 @@ class Analysis:
         # Convert the results to a DataFrame
         results_df = pd.DataFrame(results)
         return(results_df)
+
+class EIS_Analysis:
+    def __init__(self):
+        self.real_frequencies = None
+
+    def find_closest(self, series, number):
+        # Ensure the series is numeric
+        numeric_series = pd.to_numeric(series, errors='coerce')
+        # Find the index of the closest value
+        idx = (numeric_series - number).abs().argmin()
+        return numeric_series.iloc[idx]
+    
+    def get_closest_freq(self, df, frequencies):
+        # Ensure 'Freq' column is in numeric format
+        if not pd.api.types.is_numeric_dtype(df['Freq']):
+            df['Freq'] = pd.to_numeric(df['Freq'], errors='coerce')
+        
+        # Find the closest frequencies
+        self.real_frequencies = [self.find_closest(df['Freq'], freq) for freq in frequencies]
+
+        return self.real_frequencies
+
+
+
+
