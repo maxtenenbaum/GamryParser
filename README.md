@@ -3,7 +3,7 @@
 ## Description
 GamryParser is a specialized tool developed by the Deku Lab at the University of Oregon for processing data from Gamry potentiostats, specifically for CV (Cyclic Voltammetry) and EIS (Electrochemical Impedance Spectroscopy) experiments. This program efficiently handles .DTA files, processes them, and calculates key metrics such as anodic and cathodic charge storage capacity. It outputs these data to a CSV format, making it an essential tool for analyzing thin-film microelectrode arrays.
 
-## Installation
+## IDE Installation
 To install GamryParser, follow these steps:
 
 #### Clone the repository:
@@ -20,3 +20,9 @@ cd GamryParser
 <pre lang="python"><code>
 pip install -r requirements.txt
 </code></pre>
+
+## Windows Installation - No IDE
+##### 1. Ensure Python is Installed
+###### <pro lang="html"><code>https://www.python.org/downloads/</code></pre>
+##### 2. Download and Extract GamryParser
+##### 3. Run Batch File
