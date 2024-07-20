@@ -65,7 +65,7 @@ class Preprocessor():
                 self.notes = split_line[-1]
 
 
-    def extract_cv_curves(self):
+    def extract_cv_curves(self, get_curves = False):
         with open(self.filepath, 'r') as file:
             lines = file.readlines()
 
@@ -93,8 +93,15 @@ class Preprocessor():
             curve_df = pd.DataFrame(curve_data[curve], columns=headers)
             curve_df = curve_df.apply(pd.to_numeric, errors='ignore')
             curve_data[curve] = curve_df[['V vs. Ref.', 'A']]
-
-        return curve_data
+        
+        if get_curves == True:
+            return curve_df
+        else:
+            return curve_data
+    
+    def get_extra_data(self):
+        extra = self.extract_cv_curves(get_curves=True)
+        return extra
 
 
     def extract_eis(self):

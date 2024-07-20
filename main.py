@@ -30,7 +30,8 @@ if pathtype == 'file':
         curve_data = preprocessing.extract_cv_curves()
         # Analysis
         surface_area = 0.0000199504 
-        analysis = Analysis(curve_data, preprocessing.sampling_rate, surface_area)
+        extras = preprocessing.get_extra_data()
+        analysis = Analysis(curve_data, preprocessing.sampling_rate, surface_area, extras)
         results = analysis.process_curves()
         # Output
         visualization.open_save_dialog()

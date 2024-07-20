@@ -17,7 +17,8 @@ class DataLoading:
         self.filepath = filedialog.askopenfilename(
             title = "Select a file or containing folder",
             filetypes=[(".DTA Files", "*.DTA"),("All files", "*.*")])
-            
+        self.pathtype = 'file'
+        """   
         if not self.filepath:
             raise ValueError("No file was selected.")
         
@@ -26,7 +27,13 @@ class DataLoading:
             self.filepath = self.filepath.rsplit('/',1)[0]
             self.pathtype = 'folder'
         if self.file_or_directory == 'yes':
-            self.pathtype = 'file'
+            self.pathtype = 'file'"""
+    
+    def open_folder_dialog(self):
+        root = tk.Tk()
+        root.withdraw()
+        self.filepath = filedialog.askdirectory()
+        self.pathtype = 'folder'
     
     def extra_eis_frequencies(self):
             ask_for_freq = messagebox.askquestion(title='Additional Frequencies', message='Would you like to set custom frequencies for output? \n\n (Default is 1Hz, 1kHz, 100kHz, 1MHz)')

@@ -59,6 +59,8 @@ class Visualization:
 
                 # Writing the dataframe
                 result_dataframe.to_csv(file, index=False)
+
+                #writer.w
             #messagebox.showinfo("Info", f'Data written to {filename}')
 
     def eis_to_csv(self, filepath, result_dataframe, notes):
