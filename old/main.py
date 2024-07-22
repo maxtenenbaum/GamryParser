@@ -7,6 +7,7 @@ from analysis import Analysis
 from analysis import EIS_Analysis
 from output import Visualization
 import csv
+import pandas as pd
 
 # Opens a file and asks whether it is one file or a folder
 data_loader = DataLoading()
@@ -24,15 +25,12 @@ if pathtype == 'file':
     visualization = Visualization()
 
     if 'CV' in experiment_type:
-        # Metadata
         preprocessing.pull_cv_metadata()
-        # Extract Curves
         curve_data = preprocessing.extract_cv_curves()
-        # Analysis
         surface_area = 0.0000199504 
+        extras = preprocessing.get_extra_data()
         analysis = Analysis(curve_data, preprocessing.sampling_rate, surface_area)
         results = analysis.process_curves()
-        # Output
         visualization.open_save_dialog()
         save_path = visualization.get_save_path()
         name = filepath.split('/')[-1]
@@ -40,35 +38,25 @@ if pathtype == 'file':
 
     elif experiment_type.strip() == 'EISPOT':
         eis_analysis = EIS_Analysis()
-        # Metadata
         preprocessing.pull_eis_metadata()
-        # Which frequencies
         frequencies = data_loader.extra_eis_frequencies()
-        # Extract Frequency and Resistance values
-        dataframe = preprocessing.extract_eis()
+        dataframe = preprocessing.extract_eis(extra_data=False)
         dataframe = dataframe.drop(dataframe.index[0:2])
-        # Get frequencies of interest
         frequencies = [1.0, 1000.0, 100000.0, 1000000.0]
         if data_loader.custom_freq:
             frequencies = frequencies + data_loader.additional_frequencies
         frequencies.sort()
-        # Get closest real frequencies
         closest_frequencies = eis_analysis.get_closest_freq(dataframe, frequencies)
-        # Filter dataframe by frequencies of interest
-        filtered_df = dataframe[dataframe['Freq'].isin(closest_frequencies)]
+        filtered_df = dataframe[dataframe["Freq"].isin(closest_frequencies)]
+        new_df = pd.DataFrame(' ', index=dataframe.index, columns=dataframe.columns)
+        new_df.iloc[:len(filtered_df)] = filtered_df.values
+        new_df['Zmod'] = dataframe['Zmod']
+        new_df['Zphz'] = dataframe['Zphz']
         # Output to .csv
         visualization.open_save_dialog()
         save_path = visualization.get_save_path()
         name = filepath.split('/')[-1]
-        visualization.eis_to_csv(name, filtered_df, preprocessing.notes)
-
-
-
-        
-
-
-
-
+        visualization.eis_to_csv(name, new_df, preprocessing.notes)
 
 if pathtype == 'folder':
     visualization = Visualization()
@@ -95,21 +83,19 @@ if pathtype == 'folder':
 
             elif experiment_type.strip() == 'EISPOT':
                 eis_analysis = EIS_Analysis()
-                # Metadata
                 preprocessing.pull_eis_metadata()
-                # Which frequencies
                 frequencies = data_loader.extra_eis_frequencies()
-                        # Extract Frequency and Resistance values
                 dataframe = preprocessing.extract_eis()
                 dataframe = dataframe.drop(dataframe.index[0:2])
-                # Get frequencies of interest
                 frequencies = [1.0, 1000.0, 100000.0, 1000000.0]
                 if data_loader.custom_freq:
                     frequencies = frequencies + data_loader.additional_frequencies
                 frequencies.sort()
-                # Get closest real frequencies
                 closest_frequencies = eis_analysis.get_closest_freq(dataframe, frequencies)
-                # Filter dataframe by frequencies of interest
-                filtered_df = dataframe[dataframe['Freq'].isin(closest_frequencies)]
+                filtered_df = dataframe[dataframe["Freq"].isin(closest_frequencies)]
+                new_df = pd.DataFrame(' ', index=dataframe.index, columns=dataframe.columns)
+                new_df.iloc[:len(filtered_df)] = filtered_df.values
+                new_df['Zmod'] = dataframe['Zmod']
+                new_df['Zphz'] = dataframe['Zphz']                
                 saveway = f"{filepath}/{file}"
                 visualization.all_eis_to_csv(saveway, filtered_df, preprocessing.notes)

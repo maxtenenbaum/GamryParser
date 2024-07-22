@@ -59,6 +59,8 @@ class Visualization:
 
                 # Writing the dataframe
                 result_dataframe.to_csv(file, index=False)
+
+                #writer.w
             #messagebox.showinfo("Info", f'Data written to {filename}')
 
     def eis_to_csv(self, filepath, result_dataframe, notes):
@@ -122,6 +124,7 @@ class Visualization:
             # Renaming columns
             result_dataframe = result_dataframe.rename(columns={'Zreal': 'Resistance (Ohms)'})
             result_dataframe = result_dataframe.rename(columns={'Freq': 'Frequency (Hz)'})
+
             # Export the dataframe to CSV
             with open(output_filename, mode='w', newline='') as file:
                 writer = csv.writer(file)
