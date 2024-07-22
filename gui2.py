@@ -153,16 +153,24 @@ class App(tk.Frame):
         self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
     def plot_eis(self, dataframe):
-        x = dataframe['Freq']
-        x = pd.to_numeric(x, errors='coerce')
-        y1 = dataframe['Zmod']
-        y1 = pd.to_numeric(y1, errors='coerce')
-        y2 = dataframe['Zphz']
-        y2 = pd.to_numeric(y2, errors='coerce')
-        fig, ax = plt.subplots()
-        ax.plot(x, y1, marker='o', linestyle='-', label='Impedence')
-        ax.plot(x, y2, marker='x', linestyle='--', label='Phase Angle')
-        ax.set_xlabel('Frequency (Hz)')
+        freq = dataframe['Freq']
+        freq = pd.to_numeric(freq, errors='coerce')
+        zmod = dataframe['Zmod']
+        zmod = pd.to_numeric(zmod, errors='coerce')
+        zphz = dataframe['Zphz']
+        zphz = pd.to_numeric(zphz, errors='coerce')
+        fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
+        ax1.plot(freq, zmod, marker='o', linestyle='-', label='Magnitude of Impedance')
+        ax1.set_ylabel('|Z| (Ω)')
+        ax1.set_xscale('log')
+        ax1.legend()
+        ax1.grid(True, which='both', linestyle='--', linewidth=0.5)
+        ax2.plot(freq, zphz, marker='x', linestyle='--', label='Phase Angle')
+        ax2.set_xlabel('Frequency (Hz)')
+        ax2.set_ylabel('Phase (degrees)')
+        ax2.set_xscale('log')
+        ax2.legend()
+        ax2.grid(True, which='both', linestyle='--', linewidth=0.5)
         for widget in self.plot_frame.winfo_children():
             widget.destroy()
         self.canvas = FigureCanvasTkAgg(fig, master=self.plot_frame)
