@@ -5,5 +5,5 @@ IF NOT EXIST env (
 )
 call env\Scripts\activate
 pip install -r requirements.txt
-python main.py
+python gui2.py
 pause
