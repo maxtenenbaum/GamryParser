@@ -4,11 +4,11 @@ import os
 import preprocessing
 
 class Analysis:
-    def __init__(self, curve_dataframes, sampling_rate, surface_area, extra_data):
+    def __init__(self, curve_dataframes, sampling_rate, surface_area):
         self.curve_dataframes = curve_dataframes
         self.sampling_rate = sampling_rate
         self.surface_area = surface_area
-        self.extra_data = extra_data
+        #self.extra_data = extra_data
 
     def process_curves(self):
         results = []
@@ -47,12 +47,13 @@ class Analysis:
         results_df = pd.DataFrame(results)
         
         # Creating the DataFrame for extra_data
-        extra_data_df = pd.DataFrame(self.extra_data[['V vs. Ref.', 'A']]).iloc[1:]
+        #extra_data_df = pd.DataFrame(self.extra_data[['V vs. Ref.', 'A']]).iloc[1:]
         
         # Merging the two DataFrames
-        combined_df = pd.concat([results_df, extra_data_df], axis=1)
+        #combined_df = pd.concat([results_df, extra_data_df], axis=1)
         
-        return combined_df
+        #return combined_df
+        return results_df
 
 class EIS_Analysis:
     def __init__(self):

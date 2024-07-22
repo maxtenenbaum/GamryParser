@@ -104,7 +104,7 @@ class Preprocessor():
         return extra
 
 
-    def extract_eis(self):
+    def extract_eis(self, extra_data = False):
         try:
             with open(self.filepath, 'r', encoding='utf-8') as file:
                 lines = file.readlines()
@@ -130,9 +130,14 @@ class Preprocessor():
 
         eis_df = pd.DataFrame(eis_data, columns=headers)
         eis_df = eis_df.apply(pd.to_numeric, errors='ignore')
-        eis_dataframe = eis_df[['Freq', 'Zreal']]
+        eis_dataframe = eis_df[['Freq', 'Zreal', 'Zmod', 'Zphz']]
+        #eis_dataframe['Zmod'] = eis_df['Zmod']
+        #eis_dataframe['Zphz'] = eis_df['Zphz']
 
-        return eis_dataframe
+        if extra_data:
+            return eis_df
+        else:
+            return eis_dataframe
 
 
 """        if not headers or not eis_data:

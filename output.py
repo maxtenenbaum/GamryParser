@@ -124,6 +124,7 @@ class Visualization:
             # Renaming columns
             result_dataframe = result_dataframe.rename(columns={'Zreal': 'Resistance (Ohms)'})
             result_dataframe = result_dataframe.rename(columns={'Freq': 'Frequency (Hz)'})
+
             # Export the dataframe to CSV
             with open(output_filename, mode='w', newline='') as file:
                 writer = csv.writer(file)
