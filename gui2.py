@@ -134,14 +134,18 @@ class App(tk.Frame):
         self.plot_frame.grid(row=0, column=1, padx=20, pady=10, rowspan=3, stick=(tk.N, tk.S, tk.E, tk.W))
 
     def plot_cv(self, dataframe):
-        x = dataframe['V vs. Ref.']
-        x = pd.to_numeric(x, errors='coerce')
-        y = dataframe['A']
-        y = pd.to_numeric(y, errors='coerce')
         fig, ax = plt.subplots()
-        ax.plot(x, y, marker='o', linestyle='', markersize=4, color='blue', alpha=0.7)
+        for i in range(0, dataframe.shape[1], 2):
+            curve_label = dataframe.columns[i].split()[0]
+            if i + 1 < dataframe.shape[1]:
+                x = dataframe.iloc[:, i]
+                y = dataframe.iloc[:, i + 1]
+                x = pd.to_numeric(x, errors='coerce')
+                y = pd.to_numeric(y, errors='coerce')
+                ax.plot(x, y, marker='o', linestyle='', markersize=4, alpha=0.7, label=str(curve_label))
         ax.set_xlabel('V vs. Ref.')
         ax.set_ylabel('A')
+        ax.legend()
         for widget in self.plot_frame.winfo_children():
             widget.destroy()
         self.canvas = FigureCanvasTkAgg(fig, master=self.plot_frame)
@@ -276,11 +280,17 @@ class App(tk.Frame):
             if self.extra_curves_var.get():
                 for curve in results['Curve #']:
                     if curve not in self.selected_curves:
-                        results.drop(index=results.loc[results['Curve #'] == curve].index[0], inplace=True)
-            full_df = preprocessing.extract_cv_curves(get_curves=True)
-            extra_df = full_df[['V vs. Ref.','A']]
-            extra_df = extra_df.drop(extra_df.index[0]).reset_index(drop=True)
-            results = pd.concat([results, extra_df[['V vs. Ref.','A']]], axis=1)
+                        results.drop(index=results.loc[results['Curve #'] == curve].index[0], inplace=True) 
+                plotting_data = pd.DataFrame()
+                for curve in self.selected_curves:
+                    plotting_data[f'{curve} Voltage'] = curve_data[curve]['V vs. Ref.']
+                    plotting_data[f'{curve} Current'] = curve_data[curve]['A']
+            elif not self.extra_curves_var.get():
+                plotting_data = pd.DataFrame()
+                for curve in results['Curve #']:
+                    plotting_data[f'{curve} Voltage'] = curve_data[curve]['V vs. Ref.']
+                    plotting_data[f'{curve} Current'] = curve_data[curve]['A']
+            results = pd.concat([results, plotting_data], axis=1)
             if self.plot_cv_var.get():
                 if self.canvas is not None:
                     self.canvas.get_tk_widget().pack_forget()
@@ -288,7 +298,7 @@ class App(tk.Frame):
                     plt.close(self.fig)  # Close the figure
                     self.canvas = None
                     self.fig = None
-                self.plot_cv(full_df)
+                self.plot_cv(plotting_data)
             visualization.open_save_dialog()
             save_path = visualization.get_save_path()
             name = filepath.split('/')[-1]
@@ -347,7 +357,6 @@ class App(tk.Frame):
                 preprocessing.experiment_type()
                 experiment_type = preprocessing.get_experiment_type()
                 saveway = f"{filepath}/{file}"
-
                 if 'CV' in experiment_type:
                     preprocessing.pull_cv_metadata()
                     curve_data = preprocessing.extract_cv_curves()
@@ -357,11 +366,17 @@ class App(tk.Frame):
                     if self.extra_curves_var.get():
                         for curve in results['Curve #']:
                             if curve not in self.selected_curves:
-                                results.drop(index=results.loc[results['Curve #'] == curve].index[0], inplace=True)
-                    full_df = preprocessing.extract_cv_curves(get_curves=True)
-                    extra_df = full_df[['V vs. Ref.','A']]
-                    extra_df = extra_df.drop(extra_df.index[0]).reset_index(drop=True)
-                    results = pd.concat([results, extra_df[['V vs. Ref.','A']]], axis=1)
+                                results.drop(index=results.loc[results['Curve #'] == curve].index[0], inplace=True) 
+                        plotting_data = pd.DataFrame()
+                        for curve in self.selected_curves:
+                            plotting_data[f'{curve} Voltage'] = curve_data[curve]['V vs. Ref.']
+                            plotting_data[f'{curve} Current'] = curve_data[curve]['A']
+                    elif not self.extra_curves_var.get():
+                        plotting_data = pd.DataFrame()
+                        for curve in results['Curve #']:
+                            plotting_data[f'{curve} Voltage'] = curve_data[curve]['V vs. Ref.']
+                            plotting_data[f'{curve} Current'] = curve_data[curve]['A']
+                    results = pd.concat([results, plotting_data], axis=1)
                     visualization.output_all_to_csv(results, preprocessing.vlimit1, preprocessing.vlimit2, saveway)
                 elif experiment_type.strip() == 'EISPOT':
                     eis_analysis = EIS_Analysis()
