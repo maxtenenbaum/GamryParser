@@ -1,7 +1,7 @@
 # GamryParser
 
 ## Description
-GamryParser is a specialized tool developed by the Deku Lab at the University of Oregon for processing data from Gamry potentiostats, specifically for CV (Cyclic Voltammetry) and EIS (Electrochemical Impedance Spectroscopy) experiments. This program efficiently handles .DTA files, processes them, and calculates key metrics such as anodic and cathodic charge storage capacity. It outputs these data to a CSV format, making it an essential tool for analyzing thin-film microelectrode arrays.
+GamryParser is a GUI-based tool developed for the University of Oregon to process and visualize cyclic voltammetry and electrochemical impedance spectroscopy data from Gamry potentiostat/galvanostats. The program calculates key metrics for characterizing thin-film neural interfaces and electrode-electrolyte interactions. (anodal/cathodal integral value, absolute charge, charge storage capacity, hysteresis charge...)
 
 ## IDE Installation
 To install GamryParser, follow these steps:
