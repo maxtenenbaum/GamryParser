@@ -84,7 +84,7 @@ class Visualization:
 
                 root.destroy()
             # Renaming columns
-            result_dataframe = result_dataframe.rename(columns={'Zreal': 'Resistance (Ohms)'})
+            result_dataframe = result_dataframe.rename(columns={'Zreal': 'Zreal (ohm)'})
             result_dataframe = result_dataframe.rename(columns={'Freq': 'Frequency (Hz)'})
 
             # Export the dataframe to CSV
@@ -102,6 +102,7 @@ class Visualization:
             base_filename, _ = os.path.splitext(original_filename)
             output_filename = os.path.join(directory, f'{base_filename}_analysis.csv')
 
+            print(f'Processing: {base_filename}')
             # Export the dataframe to CSV
             with open(output_filename, 'w', newline='') as file:
                 writer = csv.writer(file)
@@ -120,7 +121,7 @@ class Visualization:
             # Extract directory and original filename
             directory, original_filename = os.path.split(filepath)
             base_filename, _ = os.path.splitext(original_filename)
-            output_filename = os.path.join(directory, f'{base_filename}_analysis.csv')
+            output_filename = os.path.join(directory, f'{base_filename}.csv')
             # Renaming columns
             result_dataframe = result_dataframe.rename(columns={'Zreal': 'Resistance (Ohms)'})
             result_dataframe = result_dataframe.rename(columns={'Freq': 'Frequency (Hz)'})

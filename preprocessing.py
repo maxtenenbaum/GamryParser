@@ -66,8 +66,12 @@ class Preprocessor():
 
 
     def extract_cv_curves(self, get_curves = False):
-        with open(self.filepath, 'r') as file:
-            lines = file.readlines()
+        try:
+            with open(self.filepath, 'r', encoding="utf-8") as file:
+                lines = file.readlines()
+        except UnicodeDecodeError:
+            with open(self.filepath, 'r', encoding="ISO-8859-1") as file:
+                lines = file.readlines()
 
         curve_data = {}
         data_section = False
@@ -91,7 +95,8 @@ class Preprocessor():
 
         for curve in curve_data:
             curve_df = pd.DataFrame(curve_data[curve], columns=headers)
-            curve_df = curve_df.apply(pd.to_numeric, errors='ignore')
+            curve_df = curve_df.apply(pd.to_numeric, errors="coerce")
+            #curve_df = curve_df.apply(pd.to_numeric)            
             curve_data[curve] = curve_df[['V vs. Ref.', 'A']]
         
         if get_curves == True:
@@ -129,8 +134,8 @@ class Preprocessor():
                     eis_data.append(values)
 
         eis_df = pd.DataFrame(eis_data, columns=headers)
-        eis_df = eis_df.apply(pd.to_numeric, errors='ignore')
-        eis_dataframe = eis_df[['Freq', 'Zreal', 'Zmod', 'Zphz']]
+        eis_df = eis_df.apply(pd.to_numeric, errors='coerce')
+        eis_dataframe = eis_df[['Freq', 'Zreal', 'Zimag', 'Zsig', 'Zmod', 'Zphz', 'Idc', 'Vdc', 'IERange']]
         #eis_dataframe['Zmod'] = eis_df['Zmod']
         #eis_dataframe['Zphz'] = eis_df['Zphz']
 

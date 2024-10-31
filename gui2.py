@@ -329,7 +329,7 @@ class App(tk.Frame):
                 new_df = preprocessing.extract_eis()
                 new_df = new_df.drop(new_df.index[0:2])
             else:
-                frequencies = [1.0, 1000.0, 100000.0, 1000000.0]
+                frequencies = [0.1, 1.0, 10.0, 1000.0, 100000.0, 1000000.0]
                 dataframe = preprocessing.extract_eis(extra_data=False)
                 dataframe = dataframe.drop(dataframe.index[0:2])
                 frequencies.sort()
@@ -384,25 +384,38 @@ class App(tk.Frame):
                         for curve in results['Curve #']:
                             plotting_data[f'{curve} Voltage'] = curve_data[curve]['V vs. Ref.']
                             plotting_data[f'{curve} Current'] = curve_data[curve]['A']
-                    results = pd.concat([results, plotting_data], axis=1)
-                    visualization.output_all_to_csv(results, preprocessing.vlimit1, preprocessing.vlimit2, saveway)
+                    new_results = pd.concat([results, plotting_data], axis=1)
+                    visualization.output_all_to_csv(new_results, preprocessing.vlimit1, preprocessing.vlimit2, saveway)
                 elif experiment_type.strip() == 'EISPOT':
                     eis_analysis = EIS_Analysis()
                     preprocessing.pull_eis_metadata()
                     if self.custom_freq_var.get():
                         frequencies = [float(freq.strip()) for freq in self.customfreq_entry.get().split(',')]
+                        dataframe = preprocessing.extract_eis(extra_data=False)
+                        dataframe = dataframe.drop(dataframe.index[0:2])
+                        frequencies.sort()
+                        closest_frequencies = eis_analysis.get_closest_freq(dataframe, frequencies)
+                        filtered_df = dataframe[dataframe["Freq"].isin(closest_frequencies)]
+                        new_df = pd.DataFrame(' ', index=dataframe.index, columns=dataframe.columns)
+                        new_df.iloc[:len(filtered_df)] = filtered_df.values
+                        new_df['Zmod_Full'] = dataframe['Zmod']
+                        new_df['Zphz_Full'] = dataframe['Zphz']
+                    elif self.get_all_frequencies_var.get():
+                        dataframe = preprocessing.extract_eis(extra_data=False)
+                        dataframe = dataframe.drop(dataframe.index[0:2])
+                        visualization.all_eis_to_csv(saveway, dataframe, preprocessing.notes)
                     elif not self.custom_freq_var.get():
-                        frequencies = [1.0, 1000.0, 100000.0, 1000000.0]
-                    dataframe = preprocessing.extract_eis(extra_data=False)
-                    dataframe = dataframe.drop(dataframe.index[0:2])
-                    frequencies.sort()
-                    closest_frequencies = eis_analysis.get_closest_freq(dataframe, frequencies)
-                    filtered_df = dataframe[dataframe["Freq"].isin(closest_frequencies)]
-                    new_df = pd.DataFrame(' ', index=dataframe.index, columns=dataframe.columns)
-                    new_df.iloc[:len(filtered_df)] = filtered_df.values
-                    new_df['Zmod_Full'] = dataframe['Zmod']
-                    new_df['Zphz_Full'] = dataframe['Zphz']
-                    visualization.all_eis_to_csv(saveway, new_df, preprocessing.notes)
+                        frequencies = [1.0, 1000.0, 100000.0, 1000000.0]                    
+                        dataframe = preprocessing.extract_eis(extra_data=False)
+                        dataframe = dataframe.drop(dataframe.index[0:2])
+                        frequencies.sort()
+                        closest_frequencies = eis_analysis.get_closest_freq(dataframe, frequencies)
+                        filtered_df = dataframe[dataframe["Freq"].isin(closest_frequencies)]
+                        new_df = pd.DataFrame(' ', index=dataframe.index, columns=dataframe.columns)
+                        new_df.iloc[:len(filtered_df)] = filtered_df.values
+                        new_df['Zmod_Full'] = dataframe['Zmod']
+                        new_df['Zphz_Full'] = dataframe['Zphz']
+                        visualization.all_eis_to_csv(saveway, new_df, preprocessing.notes)
             
         self.update_status("File processing complete.")
 

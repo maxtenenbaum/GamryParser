@@ -19,7 +19,8 @@ class Analysis:
             curve_df['A'] = pd.to_numeric(curve_df['A'], errors='coerce')
             curve_df['V vs. Ref.'] = pd.to_numeric(curve_df['V vs. Ref.'], errors='coerce')
             curve_df['Charge'] = 0.0
-            curve_df['Charge'][1:] = (curve_df['A'].rolling(window=2).mean()[1:]) * self.sampling_rate * 1000
+            #curve_df['Charge'][1:] = (curve_df['A'].rolling(window=2).mean()[1:]) * self.sampling_rate * 1000
+            curve_df.loc[1:, 'Charge'] = (curve_df['A'].rolling(window=2).mean()[1:]) * self.sampling_rate * 1000            
             curve_df['Total Charge'] = curve_df['Charge'].cumsum()
             curve_df['Charge Density mC/cm2'] = curve_df['Charge'] / self.surface_area
             curve_df['Absolute Charge'] = abs(curve_df['Charge'] / self.surface_area)
