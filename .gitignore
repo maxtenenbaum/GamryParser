@@ -1,0 +1,53 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+
+# Editable install metadata
+*.egg-link
+
+# pip metadata
+pip-wheel-metadata/
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# PyCharm & VSCode
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# Test and coverage outputs
+.coverage
+.tox/
+.nox/
+.cache/
+pytest_cache/
+
+# MyPy, Pyre, etc.
+.mypy_cache/
+.pyre/
+.dmypy.json
+
+# Misc
+.DS_Store
+*.bak
+*.swp
