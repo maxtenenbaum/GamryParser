@@ -41,6 +41,9 @@ window.runBatchParser = async () => {
     return;
   }
 
+  const surfaceAreaInput = document.getElementById("surfaceArea");
+  const surfaceArea = parseFloat(surfaceAreaInput.value) || 2000;
+  pyodide.globals.set("surface_area", surfaceArea);
   const container = document.getElementById("batch-output");
   container.innerHTML = "";
   allCSVs = [];
@@ -50,7 +53,7 @@ window.runBatchParser = async () => {
     pyodide.globals.set("uploaded_text", text);
 
     try {
-      const result = pyodide.runPython(`get_csvs(uploaded_text)`);
+      const result = pyodide.runPython(`get_csvs(uploaded_text, surface_area)`);
       const csvs = Object.fromEntries(result.toJs().entries());
       console.log("Parsed CSVs:", csvs);
 

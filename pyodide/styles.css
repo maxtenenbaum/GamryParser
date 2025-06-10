@@ -181,3 +181,80 @@ input[type="file"] {
   0%, 100% { transform: scale(1); opacity: 0.9; }
   50% { transform: scale(1.1); opacity: 1; }
 }
+
+table.dataframe {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  background-color: var(--panel);
+  color: var(--text);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid #2e3440;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+table.dataframe thead {
+  background-color: #1f2937;
+  color: var(--accent);
+  font-weight: bold;
+  text-align: left;
+}
+
+table.dataframe thead th {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #374151;
+}
+
+table.dataframe tbody tr:nth-child(even) {
+  background-color: #1b1f27;
+}
+
+table.dataframe tbody tr:nth-child(odd) {
+  background-color: #15171d;
+}
+
+table.dataframe td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid #2d2f35;
+  vertical-align: top;
+  font-size: 0.9rem;
+}
+
+table.dataframe tbody tr:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* === Tabs Styling === */
+#tabs-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tab {
+  padding: 0.5rem 1rem;
+  background-color: var(--panel);
+  color: var(--subtext);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  border: 1px solid #2e3440;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab:hover {
+  background-color: #2a2e38;
+  color: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.tab.active {
+  background-color: var(--accent);
+  color: #fff;
+  font-weight: bold;
+  border-color: var(--accent-hover);
+}

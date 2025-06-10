@@ -28,6 +28,10 @@
         <input type="file" id="upload" multiple disabled />
         <div class="button-row">
           <button id="analyzeButton" onclick="runBatchParser()" disabled>Parse Files</button>
+          <div style="margin-top: 1rem;">
+            <label for="surfaceArea">Surface Area (µm²):</label>
+            <input type="number" id="surfaceArea" value="2000" min="1" style="width: 100px;" />
+          </div>
           <button id="downloadAllBtn" onclick="downloadAll()" disabled>⬇️ Download All as ZIP</button>
         </div>
       </div>
