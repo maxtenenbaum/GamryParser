@@ -1,0 +1,183 @@
+:root {
+  --bg: #0d0f13;
+  --panel: #1a1c22;
+  --text: #e5e7eb;
+  --subtext: #94a3b8;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --font-main: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+body {
+  margin: 0;
+  padding: 4rem 1rem;
+  background-color: var(--bg);
+  font-family: var(--font-main);
+  color: var(--text);
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--subtext);
+  margin-bottom: 2rem;
+}
+
+.tool-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.tool-card {
+  background: var(--panel);
+  border: 1px solid #2e3440;
+  border-radius: 10px;
+  padding: 1.5rem;
+  width: 240px;
+  text-align: left;
+  text-decoration: none;
+  color: var(--text);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.tool-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 14px rgba(59, 130, 246, 0.3);
+  border-color: var(--accent-hover);
+}
+
+.tool-card h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--accent-hover);
+}
+
+.tool-card p {
+  font-size: 0.95rem;
+  color: var(--subtext);
+}
+.input-controls {
+  margin-top: 1.5rem;
+}
+
+button {
+  padding: 0.6rem 1.4rem;
+  font-size: 1rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(145deg, #3b82f6, #2563eb);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(59, 130, 246, 0.2);
+  transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+  background: linear-gradient(145deg, #60a5fa, #3b82f6);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.button-row button {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+input[type="file"] {
+  font-family: var(--font-mono);
+  background-color: var(--panel);
+  color: var(--text);
+  border: 1px solid #2d2f35;
+  padding: 0.6rem;
+  border-radius: 6px;
+}
+
+#batch-output {
+  margin-top: 2rem;
+  font-family: var(--font-mono);
+  color: var(--text);
+}
+
+#batch-output h3 {
+  font-size: 1.1rem;
+  color: var(--highlight, var(--accent-hover));
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg);
+  color: var(--subtext);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  font-family: var(--font-mono);
+}
+
+.loader-content {
+  text-align: center;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.loader-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+.loader-text {
+  font-size: 1rem;
+  color: var(--highlight);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.1); opacity: 1; }
+}

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Plotter – Gamry Toolkit</title>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="loading">⏳ Loading Pyodide and Python packages...</div>
+
+  <div id="main-app">
+    <h2>Plotting Tool</h2>
+    <p>Upload a `.DTA` file and select columns to generate plots.</p>
+    <input type="file" id="upload" disabled />
+    <button id="analyzeButton" onclick="runPlotter()" disabled>Analyze and Plot</button>
+
+    <div id="plot-ui" style="margin-top: 1rem;"></div>
+    <div id="plot-output" style="margin-top: 2rem;"></div>
+  </div>
+
+  <script type="module" src="plotter-app.js"></script>
+</body>
+</html>

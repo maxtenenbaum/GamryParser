@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Batch Parser – GamryParser</title>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&display=swap" rel="stylesheet" />
+</head>
+<body>
+    <div id="loading" class="loading-screen">
+        <div class="loader-content">
+          <div class="loader-icon">⏳</div>
+          <div class="loader-text">Initializing local Python environment...</div>
+        </div>
+      </div>
+      
+  <div id="main-app" style="display: none;">
+    <div class="container">
+      <h1>📦 Batch Parser</h1>
+      <p class="subtitle">Upload multiple `.DTA` files and download all parsed tables as CSVs. All processing happens in your browser.</p>
+
+      <div class="input-controls">
+        <input type="file" id="upload" multiple disabled />
+        <div class="button-row">
+          <button id="analyzeButton" onclick="runBatchParser()" disabled>Parse Files</button>
+          <button id="downloadAllBtn" onclick="downloadAll()" disabled>⬇️ Download All as ZIP</button>
+        </div>
+      </div>
+
+      <div id="batch-output"></div>
+    </div>
+  </div>
+
+  <script type="module" src="batch-parse.js"></script>
+</body>
+</html>
