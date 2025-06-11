@@ -3,15 +3,21 @@ import csv
 import pandas as pd
 
 class Parser():
-    def __init__(self, filepath, lines, experiment, dataframes):
+    def __init__(self, filepath, lines, experiment, dataframes, scanrate, stepsize, surface_area):
         self.filepath = filepath
+        self.scanrate = scanrate
+        self.stepsize = stepsize
+        self.surface_area = surface_area
         self.lines = lines
         self.experiment = experiment
         self.notes = ''
         self.dataframes = dataframes
 
     @classmethod
-    def from_file(cls, filepath):
+    def from_file(cls, filepath, surface_area=2000):
+        scanrate = None
+        stepsize = None
+
         try:
             with open(filepath, 'r', encoding='utf-8') as file:
                 lines = file.readlines()
@@ -24,13 +30,24 @@ class Parser():
             split_line = line.split('\t')
             if split_line[0] == "TAG":
                 experiment = split_line[-1].strip()
+            elif split_line[0] == 'SCANRATE':
+                try:
+                    scanrate = float(split_line[-2].strip())
+                except (ValueError, IndexError):
+                    scanrate = None
+            elif split_line[0] == 'STEPSIZE':
+                try:
+                    stepsize = float(split_line[-2].strip())
+                except (ValueError, IndexError):
+                    stepsize = None
 
-        dataframes = cls.parse_tables_from_lines(lines)
+        dataframes = cls.parse_tables_from_lines(lines, experiment, scanrate, stepsize, surface_area)
 
-        return cls(filepath, lines, experiment, dataframes)
+        return cls(filepath, lines, experiment, dataframes, scanrate, stepsize, surface_area)
+
 
     @staticmethod
-    def parse_tables_from_lines(lines):
+    def parse_tables_from_lines(lines, experiment, scanrate, stepsize, surface_area):
         cleaned_lines = [line.strip() for line in lines if line.strip()]
         split_rows = [row.split('\t') for row in cleaned_lines]
         lines_dataframe = pd.DataFrame(split_rows)
@@ -54,29 +71,38 @@ class Parser():
         dataframes = {}
         for name, df in split_data.items():
             try:
-                # Find the header row
                 header_row_index = df[df.iloc[:, 0] == 'Pt'].index[0]
                 headers = df.iloc[header_row_index].astype(str)
-
-                # Get rows after the header
                 data = df.iloc[header_row_index + 1:].reset_index(drop=True)
                 data.columns = headers
-
-                # Remove NONE columns
                 data = data.loc[:, data.columns.notna()]
                 data = data.loc[:, data.columns.str.strip() != ""]
                 data = data.loc[:, data.columns != "None"]
 
-                # Stop at first non-numeric row
                 def starts_with_digit(val):
                     return isinstance(val, str) and val.strip() and val.strip()[0].isdigit()
 
                 valid_rows = data[data.iloc[:, 0].apply(starts_with_digit)].reset_index(drop=True)
 
+                if experiment.lower() == 'cv' and name[:5] == 'CURVE':
+                    valid_rows['Im'] = valid_rows['Im'].astype(float)
+                    if scanrate is not None and stepsize is not None:
+                        dt = stepsize / scanrate
+                        valid_rows['Charge'] = (((valid_rows['Im'] + valid_rows['Im'].shift(1)) / 2) * dt) * 1000
+                        valid_rows['Charge'] = valid_rows['Charge'].fillna(0)
+                        valid_rows['Total Charge'] = valid_rows['Charge'].cumsum()
+                        valid_rows['Charge Density'] = valid_rows['Total Charge'] / (surface_area * 1e-8)
+                        valid_rows['Charge Integral'] = abs(valid_rows['Charge']) / (surface_area * 1e-8)
+                        valid_rows['Anodal Charge Integral'] = valid_rows['Charge Integral'].where(valid_rows['Charge'] > 0, 0)
+                        valid_rows['Cathodal Charge Integral'] = valid_rows['Charge Integral'].where(valid_rows['Charge'] < 0, 0)
+                    else:
+                        print("Missing scanrate or stepsize — skipping charge calculations.")
+
                 dataframes[name] = valid_rows
 
             except IndexError as e:
                 print(f"Skipping {name}, {str(e)}")
+
 
         return dataframes
 
