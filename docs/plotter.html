@@ -1,24 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Plotter – Gamry Toolkit</title>
-  <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+  <title>Plotter – GamryParser</title>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <div id="loading">⏳ Loading Pyodide and Python packages...</div>
-
-  <div id="main-app">
-    <h2>Plotting Tool</h2>
-    <p>Upload a `.DTA` file and select columns to generate plots.</p>
-    <input type="file" id="upload" disabled />
-    <button id="analyzeButton" onclick="runPlotter()" disabled>Analyze and Plot</button>
-
-    <div id="plot-ui" style="margin-top: 1rem;"></div>
-    <div id="plot-output" style="margin-top: 2rem;"></div>
+  <div class="container">
+    <h1>📊 Plotter</h1>
+    <p class="subtitle">Coming soon! This tool will help you create publication-quality plots from your electrochemical data.</p>
+    
+    <div class="coming-soon-card">
+      <div class="coming-soon-icon">🚧</div>
+      <h2>Under Development</h2>
+      <p>Check back soon for updates!</p>
+    </div>
   </div>
-
-  <script type="module" src="plotter-app.js"></script>
 </body>
 </html>
