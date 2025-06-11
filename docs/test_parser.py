@@ -76,8 +76,8 @@ class Parser:
                         valid_rows['Charge'] = (((valid_rows['Im'] + valid_rows['Im'].shift(1)) / 2) * dt) * 1000
                         valid_rows['Charge'] = valid_rows['Charge'].fillna(0)
                         valid_rows['Total Charge'] = valid_rows['Charge'].cumsum()
-                        valid_rows['Charge Density'] = valid_rows['Total Charge'] / (surface_area * 1e-8)
-                        valid_rows['Charge Integral'] = abs(valid_rows['Charge']) / (surface_area * 1e-8)
+                        valid_rows['Charge Density'] = valid_rows['Total Charge'] / (surface_area * 1e-9)
+                        valid_rows['Charge Integral'] = abs(valid_rows['Charge']) / (surface_area * 1e-9)
                         valid_rows['Anodal Charge Integral'] = valid_rows['Charge Integral'].where(valid_rows['Charge'] > 0, 0)
                         valid_rows['Cathodal Charge Integral'] = valid_rows['Charge Integral'].where(valid_rows['Charge'] < 0, 0)
 
