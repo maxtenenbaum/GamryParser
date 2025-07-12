@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Batch Parser – GamryParser</title>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&display=swap" rel="stylesheet" />
+</head>
+<body>
+    <div id="loading" class="loading-screen">
+        <div class="loader-content">
+          <div class="loader-icon">⏳</div>
+          <div class="loader-text">Initializing local Python environment...</div>
+        </div>
+      </div>
+      
+  <div id="main-app" style="display: none;">
+    <div class="container">
+      <h1>📦 Longitudinal Study Analysis</h1>
+      <p class="subtitle">Upload multiple `.DTA` files and download all parsed tables as CSVs. All processing happens in your browser.</p>
+
+      <div class="input-controls">
+        <input type="file" id="upload" multiple disabled />
+        <div class="button-row">
+          <button id="analyzeButton" onclick="compositeDataframes()" disabled>Parse Files into Composite Dataframes</button>
+          <div style="margin-top: 1rem;">
+            <label for="surfaceArea">Surface Area (µm²):</label>
+            <input type="number" id="surfaceArea" value="2000" min="1" style="width: 100px;" />
+            <label for="cvCurve">Curve # to extract (CV Only):</label>
+            <input type="number" id="cvCurve" value="3" style="width: 100px;"/>
+          </div>
+          <button id="downloadAllBtn" onclick="downloadAlls()" disabled>⬇️ Download All as ZIP</button>
+        </div>
+      </div>
+      <div id="batch-output"></div>
+    </div>
+  </div>
+
+  <script type="module" src="aging.js"></script>
+</body>
+</html>

@@ -3,7 +3,7 @@ import csv
 import pandas as pd
 
 class Parser():
-    def __init__(self, filepath, lines, experiment, dataframes, scanrate, stepsize, surface_area):
+    def __init__(self, filepath, lines, experiment, dataframes, scanrate, stepsize, time, date, surface_area):
         self.filepath = filepath
         self.scanrate = scanrate
         self.stepsize = stepsize
@@ -11,6 +11,8 @@ class Parser():
         self.lines = lines
         self.experiment = experiment
         self.notes = ''
+        self.date = date
+        self.time = time
         self.dataframes = dataframes
 
     @classmethod
@@ -40,10 +42,16 @@ class Parser():
                     stepsize = float(split_line[-2].strip())
                 except (ValueError, IndexError):
                     stepsize = None
+            elif split_line[0] == 'DATE':
+                date_string = split_line[2].strip()
+                date = pd.to_datetime(date_string, format='%m/%d/%Y').date()
+            elif split_line[0] == 'TIME':
+                time_string = split_line[2].strip()
+                time = pd.to_datetime(time_string).time()
 
         dataframes = cls.parse_tables_from_lines(lines, experiment, scanrate, stepsize, surface_area)
 
-        return cls(filepath, lines, experiment, dataframes, scanrate, stepsize, surface_area)
+        return cls(filepath, lines, experiment, dataframes, scanrate, stepsize, time, date, surface_area)
 
 
     @staticmethod
@@ -136,6 +144,37 @@ class Parser():
             print(f"Saved {filename}")
         except Exception as e:
             print(f"Failed to save {filename}: {e}")
+
+
+    # This is rough! Will only be for a single CV curve and EIS spectrum
+    def batch_dta(dfs, surface_area = 2000, cv_curve = 2):
+        unique_experiments = {'CV50' : [], 'CV50K' : [], 'EISPOT' : []}
+        try:
+            for df in dfs:
+                electrode = 'N/A'
+                if 'E' in df.split('/')[-1].split('_')[-2]:
+                    electrode = df.split('/')[-1].split('_')[-2]            
+                temp = Parser.from_file(df, surface_area)
+                if temp.experiment == 'EISPOT':
+                    temp.dataframes['ZCURVE']['Date'] = temp.date
+                    temp.dataframes['ZCURVE']['Time'] = temp.time
+                    temp.dataframes['ZCURVE']['Site'] = electrode
+                    unique_experiments['EISPOT'].append(temp.dataframes['ZCURVE'])
+                elif temp.experiment == 'CV':
+                    temp.dataframes[f'CURVE{str(cv_curve)}']['Date'] = temp.date
+                    temp.dataframes[f'CURVE{str(cv_curve)}']['Time'] = temp.time
+                    temp.dataframes[f'CURVE{str(cv_curve)}']['Site'] = electrode
+                    if round(temp.scanrate) == 50:
+                        unique_experiments['CV50'].append(temp.dataframes[f'CURVE{str(cv_curve)}'])
+                    if round(temp.scanrate) == 50000:
+                        unique_experiments['CV50K'].append(temp.dataframes[f'CURVE{str(cv_curve)}'])
+        except TypeError:
+            print('Must enter a list of .DTA files')
+        combined_experiments = {
+            key: pd.concat(df_list, ignore_index=True)
+            for key, df_list in unique_experiments.items()
+        }
+        return combined_experiments
 
     def get_experiment_type(self):
         return self.experiment
