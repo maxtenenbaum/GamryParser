@@ -14,6 +14,7 @@ class Parser():
         self.date = date
         self.time = time
         self.dataframes = dataframes
+        self.errors = {}
 
     @classmethod
     def from_file(cls, filepath, surface_area=2000):
@@ -178,6 +179,38 @@ class Parser():
 
     def get_experiment_type(self):
         return self.experiment
+    
+    def check_overloads(self):
+        def parse_issues(status_string):
+            issue_map = {
+                0: ('t', "Timing problem: Data rate is too fast"),
+                1: ('e', "Potential Overload: Cell voltage is too big to measure"),
+                2: ('c', "CA Overload: Potentiostat can't control the cell potential or current"),
+                3: ('h', "CA History Overload: Transient overload, CA speed not optimized"),
+                4: ('i', "I Overload: Wrong I/E range"),
+                5: ('h', "I History Overload: Current spike or transient"),
+                6: ('s', "Settling problem (hardware): Experiment too fast to autorange I/E"),
+                7: ('s', "Settling problem (software): Script/operator triggered early measurement"),
+                8: ('i', "ADC current input out of range: Wrong I channel range or offset"),
+                9: ('v', "ADC voltage input out of range: Wrong V channel range or offset"),
+                10: ('a', "ADC auxiliary input out of range: Wrong Aux channel range or offset"),
+                # Additional flags:
+                11: ('r', "Raw data overrun: Computer too busy"),
+                12: ('q', "Processed data overrun: Computer too slow"),
+            }
+
+            issues = []
+            for i, char in enumerate(status_string):
+                if i in issue_map and char == issue_map[i][0]:
+                    issues.append(issue_map[i][1])
+
+            return issues if issues else "Unknown issue or format"
+
+        for df in self.dataframes:
+            overs = self.dataframes[df]['Over'].unique()
+            for val in overs:
+                if val != '...........':
+                    self.errors[df] = parse_issues(val)
 
     def __str__(self):
         tables = ", ".join(self.get_dataframe_names())
