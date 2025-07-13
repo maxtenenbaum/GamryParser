@@ -104,6 +104,8 @@ class Parser():
                         valid_rows['Charge Integral'] = abs(valid_rows['Charge']) / (surface_area * 1e-8)
                         valid_rows['Anodal Charge Integral'] = valid_rows['Charge Integral'].where(valid_rows['Charge'] > 0, 0)
                         valid_rows['Cathodal Charge Integral'] = valid_rows['Charge Integral'].where(valid_rows['Charge'] < 0, 0)
+                        valid_rows['Anodal Charge Storage Capacity'] = sum(valid_rows['Anodal Charge Integral'])
+                        valid_rows['Cathodal Charge Storage Capacity'] = sum(valid_rows['Cathodal Charge Integral'])
                     else:
                         print("Missing scanrate or stepsize — skipping charge calculations.")
 
