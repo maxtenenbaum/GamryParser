@@ -15,10 +15,3 @@ GamryParser is a modular, Python-based toolkit for parsing, analyzing, and visua
 - 🧪 Easy to test, extend, and integrate into research workflows
 
 ---
-
-## Installation
-
-### Clone the repo:
-```bash
-git clone https://github.com/yourusername/gamryparser.git
-cd gamryparser
