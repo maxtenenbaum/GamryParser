@@ -1,3 +1,26 @@
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "gamryparser"
+version = "0.1.0" # Start with an initial version
+authors = [
+  { name="Max Tenenbaum", email="maxtenenbaum223@gmail.com" },
+]
+description = "A parser for Gamry EXPLAIN-formatted DTA files with neural interface specific data analysis"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "numpy",
+    "pandas"
+]
+
+[project.urls]
+Homepage = "https://github.com/maxtenenbaum/GamryParser"
+Issues = "https://github.com/maxtenenbaum/GamryParser/issues"
